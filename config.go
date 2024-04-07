@@ -77,7 +77,7 @@ func (cfg *Config) setDefaults() {
 	cfg.Auth.PasswordAuth.Enabled = true
 	cfg.Auth.PublicKeyAuth.Enabled = true
 	cfg.SSHProto.Version = "SSH-2.0-sshesame"
-	cfg.SSHProto.Banner = "This is an SSH honeypot. Everything is logged and monitored."
+	cfg.SSHProto.Banner = "This is an SSH honeypot. Everything is logged and monitored.\n"
 }
 
 type keySignature int
@@ -180,7 +180,7 @@ func (cfg *Config) setupSSHConfig() error {
 			slog.Info(fmt.Sprintf("User %q with address %q attempted to authenticate using %q: %v", conn.User(), conn.RemoteAddr(), method, err))
 		},
 		BannerCallback: func(conn ssh.ConnMetadata) string {
-			return cfg.SSHProto.Banner
+			return cfg.SSHProto.Banner + "\n"
 		},
 		NoClientAuth:  cfg.Auth.NoAuth,
 		MaxAuthTries:  cfg.Auth.MaxTries,
@@ -255,7 +255,7 @@ func (cfg *Config) Load(configString string, dataDir string) error {
 	}
 
 	if cfg.SSHProto.Banner == "" {
-		cfg.SSHProto.Banner = "Default banner"
+		cfg.SSHProto.Banner = "Default banner\n"
 	}
 
 	if err := cfg.setupSSHConfig(); err != nil {
