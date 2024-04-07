@@ -1,5 +1,5 @@
 server:
-  listen_address: 127.0.0.1:2022
+  listen_address: 127.0.0.1:2222
 
   # Host private key files.
   # If unspecified, null or empty, an RSA, ECDSA and Ed25519 key will be generated and stored.

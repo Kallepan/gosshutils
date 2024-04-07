@@ -176,31 +176,34 @@ func (cfg *Config) setupSSHConfig() error {
 			Ciphers:        cfg.SSHProto.Ciphers,
 			MACs:           cfg.SSHProto.MACs,
 		},
-		PasswordCallback: func(conn ssh.ConnMetadata, password []byte) (*ssh.Permissions, error) {
-			if !cfg.Auth.PasswordAuth.Enabled {
-				return nil, errors.New("password authentication is disabled")
-			}
-
-			return nil, errors.New("password authentication is not implemented")
+		AuthLogCallback: func(conn ssh.ConnMetadata, method string, err error) {
+			slog.Info(fmt.Sprintf("User %q with address %q attempted to authenticate using %q: %v", conn.User(), conn.RemoteAddr(), method, err))
 		},
-		PublicKeyCallback: func(conn ssh.ConnMetadata, key ssh.PublicKey) (*ssh.Permissions, error) {
-			if !cfg.Auth.PublicKeyAuth.Enabled {
-				return nil, errors.New("public key authentication is disabled")
-			}
-
-			return nil, errors.New("public key authentication is not implemented")
-		},
-		KeyboardInteractiveCallback: func(conn ssh.ConnMetadata, client ssh.KeyboardInteractiveChallenge) (*ssh.Permissions, error) {
-			if !cfg.Auth.KeyboardInteractiveAuth.Enabled {
-				return nil, errors.New("keyboard interactive authentication is disabled")
-			}
-
-			return nil, errors.New("keyboard interactive authentication is not implemented")
+		BannerCallback: func(conn ssh.ConnMetadata) string {
+			return cfg.SSHProto.Banner
 		},
 		NoClientAuth:  cfg.Auth.NoAuth,
 		MaxAuthTries:  cfg.Auth.MaxTries,
 		ServerVersion: cfg.SSHProto.Version,
 	}
+
+	// set default auth handlers
+	if cfg.Auth.PublicKeyAuth.Enabled {
+		sshConfig.PublicKeyCallback = func(conn ssh.ConnMetadata, key ssh.PublicKey) (*ssh.Permissions, error) {
+			return nil, errors.New("password authentication is not implemented")
+		}
+	}
+	if cfg.Auth.PasswordAuth.Enabled {
+		sshConfig.PasswordCallback = func(conn ssh.ConnMetadata, password []byte) (*ssh.Permissions, error) {
+			return nil, errors.New("password authentication is not implemented")
+		}
+	}
+	if cfg.Auth.KeyboardInteractiveAuth.Enabled {
+		sshConfig.KeyboardInteractiveCallback = func(conn ssh.ConnMetadata, client ssh.KeyboardInteractiveChallenge) (*ssh.Permissions, error) {
+			return nil, errors.New("keyboard interactive authentication is not implemented")
+		}
+	}
+
 	if err := cfg.parseHostKeys(); err != nil {
 		return err
 	}
@@ -249,6 +252,10 @@ func (cfg *Config) Load(configString string, dataDir string) error {
 		if err := cfg.setDefaultHostKeys(dataDir, []keySignature{rsa_key, ecdsa_key, ed25519_key}); err != nil {
 			return err
 		}
+	}
+
+	if cfg.SSHProto.Banner == "" {
+		cfg.SSHProto.Banner = "Default banner"
 	}
 
 	if err := cfg.setupSSHConfig(); err != nil {
