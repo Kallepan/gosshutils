@@ -1,0 +1,32 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch current package",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/main.go",
+            "output": "bin/main",
+            "args": [
+                "--config",
+                "../config.yaml",
+                "--data_dir",
+                "../data",
+            ],
+            "env": {
+                "LOG_LEVEL": "debug",
+            }
+        },
+        {
+            "name": "Test current package",
+            "type": "go",
+            "request": "launch",
+            "mode": "test",
+            "args": [
+                "./..."
+            ],
+            "program": "${workspaceFolder}",
+        }
+    ]
+}

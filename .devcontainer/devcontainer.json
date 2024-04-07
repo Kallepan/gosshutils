@@ -1,0 +1,32 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/go
+{
+	"name": "Go",
+	"image": "mcr.microsoft.com/devcontainers/go:1-1.22-bookworm",
+	"forwardPorts": [
+		2222
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"GitHub.copilot",
+				"GitHub.copilot-chat",
+				"eamodio.gitlens",
+				"golang.go"
+			],
+			"settings": {
+				"[go]": {
+					"editor.defaultFormatter": "golang.go",
+					"editor.formatOnSave": true,
+					"editor.insertSpaces": true,
+					"go.formatTool": "fmt",
+					"go.lintOnSave": "package",
+					"gopls": {
+						"formatting.gofumpt": true,
+						"ui.semanticTokens": true
+					}
+				}
+			}
+		}
+	}
+}
