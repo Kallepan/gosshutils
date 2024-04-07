@@ -6,7 +6,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/kallepan/sshutils"
+	sshutils "github.com/kallepan/gosshutils"
 )
 
 func handler(conn *sshutils.Conn) {

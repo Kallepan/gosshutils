@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/kallepan/sshutils"
+	sshutils "github.com/kallepan/gosshutils"
 	"golang.org/x/crypto/ssh"
 )
 

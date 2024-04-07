@@ -1,4 +1,4 @@
-module github.com/kallepan/sshutils
+module github.com/kallepan/gosshutils
 
 go 1.22.1
 
