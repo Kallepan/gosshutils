@@ -11,7 +11,6 @@ import (
 
 func handler(conn *sshutils.Conn) {
 	defer conn.Close()
-	println("Test")
 }
 
 func main() {
@@ -50,7 +49,7 @@ func main() {
 		conn, err := listener.Accept()
 		if err != nil {
 			slog.Warn("Failed to accept the incoming connection", "error", err)
-			return
+			continue
 		}
 		go handler(conn)
 	}
